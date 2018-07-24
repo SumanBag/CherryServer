@@ -1,0 +1,164 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta charset='UTF-8'/>
+
+
+<script>
+
+function Winclose()
+{
+    window.close();
+}
+
+</script>
+
+
+<link rel='image/icon' href='imgs/favicon.png'/>
+<style type='text/css'>
+
+body
+{
+   font-family:'sans-serif';
+   margin:0 auto;
+   background-color:rgb(242,242,242);
+}
+
+#header
+{
+   //border:1px solid black;
+   border-top:4px solid rgb(249,158,26);
+   background-color:white;
+   width:100%;
+   height:80px;
+   box-shadow:0px 3px 5px grey;
+   position:fixed;
+   
+
+
+}
+#hdcntnr
+{
+     margin:0 auto;
+	 width:1000px;
+	 //padding:5px;
+	 color:black;
+	 
+	 font-family:cambria;
+	 //border:1px solid black;
+  
+}
+#banner
+{
+	height:30px;
+	width:50%;
+	//display:inline-block;
+	
+}
+#hdnav>a
+{  padding-left:20px;
+   padding-right:20px;
+   
+   text-decoration:none;
+   color:black;
+  display:inline-block;
+
+}
+a:hover
+{
+
+   color:blue;
+   border-bottom:3px solid blue;
+
+}
+#wrap
+{
+
+  //border:1px solid black;
+  margin:0px auto;
+  //left:10px;
+  //right:10px;
+  opacity:60%;
+  height:1000px;
+  //position:relative;
+  color:white;
+  padding-top:100px;
+  padding-left:20px;
+  padding-right:20px;
+
+}
+
+#footer
+{
+     color:black;
+	 border-top:2px solid #dfdce3; 
+	 //background-color:white;
+	 height:50px;
+	 padding:10px;
+
+
+}
+#rgstr
+{
+	height:150px;
+	width:150px;
+	border:5px solid rgb(249,158,26);
+	border-radius:150px 150px;
+	color:white;
+	font-size:20px;
+	box-shadow:none;
+	background-color:rgb(251,188,94);
+	
+}
+#rgstr:hover
+{
+	font-size:30px;
+	background-color:rgb(236,145,6);
+}
+</style>
+</head>
+<body>
+<div id='header'>
+  <div id='hdcntnr'>
+  
+ 
+  
+  <nav id='hdnav'>
+   <img src='imgs/cover.jpg' style='height:60px;width:50%;' />
+   
+   <a href='index.php'><h4 style='display:inline-block;height:5px;'>Home</h4></a>
+   <a href='downloads/dwnldspg.html'><h4 style='display:inline-block;height:5px;'>Downloads</h4></a>
+   <a href='devices.html'><h4 style='display:inline-block;height:5px;'>Devices</h4></a>
+   <a href='about.html'><h4 style='display:inline-block;height:5px;'>About</h4></a>
+  </nav>
+</div>
+</div>
+
+
+
+<div id='wrap'>
+
+<center>
+
+<div style='height:200px;width:200px'>
+
+
+<form action='' style="margin-top:50px" method='get'>
+<input type='checkbox' name='auth' value='42345f86c/2e6b814f7/ab57a8bc2/e7b13bef8f/2380a268570/ef109c60/49aa5a77'/>
+<input type='checkbox' name='key' value='d80dc703/9df338c41b1/a84c6fe49/e71bd7462f/6d618c3c1/ba950cf70/a079ac6e'/>
+<input id='rgstr' type='submit' value='Register'/>
+</form>
+<Button onclick='Winclose()'>close</Button>
+<a href="javascript:window.open('','_self').close();">close</a>
+
+</div>
+</center>
+<br>
+<br>
+<br>
+</div>
+
+</body>
+</html>
