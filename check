@@ -1,0 +1,2064 @@
+<html><head>
+    <title>Online Evaluation System</title>
+    <script src="../view/jquery.min.js"></script>
+    <script type="text/javascript">
+        javascript: history.forward();
+        $(document).ready(function() {
+            $("#radio_submit").click(function (e) {
+                var rollno = document.getElementById("rollno").value;
+                var questions = $( ".divider" ).size();                
+                for (var i = 1; i <= questions; i++)
+                {
+                    radio_name = 'rad'+i+'[]';
+
+                    question_id = 'question_id'+i;
+
+                    var question_id = document.getElementById(question_id).value;
+
+                    var rates = document.getElementsByName(radio_name);
+                    var rate_value = 0;
+                    for(var j = 0; j < rates.length; j++){
+                        if(rates[j].checked){
+                            rate_value = rates[j].value;
+                        }
+                    }
+
+                    if(parseInt(rate_value,10) != 0){
+                        $.ajax({url: "../view/updateReply.php?value="+rate_value+"&id="+question_id+"&rollno="+rollno, success: function(result){
+                            $("#div1").html(result);
+                        }});
+                    }
+                }
+            });
+
+            $('.rg').change(function(){                                      
+                var radioid = $(this).attr('id');               
+                var radioname = $(this).attr('name');                      
+                var id = radioid.substring(3);
+
+                var button_id = 'button'+id;                
+                var button = document.getElementById(button_id);
+                button.style.background = "green";
+
+                var rollno = $('#rollno').val();                         
+                var question_id =  $("#" + "question_id" + id).val();                                     
+                var radios = $('[name="' + radioname + '"]');               
+                var radiovalue = 0;
+                for(var j = 0; j < radios.length; j++){
+                    if(radios[j].checked){
+                        radiovalue = radios[j].value;
+                    }
+                } 
+
+                if(parseInt(radiovalue,10) != 0){
+                    $.ajax({url: "../view/updateReply.php?value="+radiovalue+"&id="+question_id+"&rollno="+rollno, success: function(result){
+                        $("#div1").html(result);
+                    }});
+                }             
+
+            });
+
+            $('.rg').mousedown(function() { 
+
+                if(this.checked) {
+
+                    $(this).mouseup(function() {  
+
+                        var radio = this;
+                        var radioid = $(this).attr('id');               
+                        var radioname = $(this).attr('name');                      
+                        var id = radioid.substring(3);
+
+                        var button_id = 'button'+id;                
+                        var button = document.getElementById(button_id);
+                        button.style.background = "red";
+
+                        var rollno = $('#rollno').val();                         
+                        var question_id =  $("#" + "question_id" + id).val();
+
+                        $.ajax({url: "../view/updateReply.php?value=0"+"&id="+question_id+"&rollno="+rollno, success: function(result){
+                            $("#div1").html(result);
+                        }});
+                        setTimeout(function() { 
+                            radio.checked = false; 
+                        }, 5); 
+
+                        $(this).unbind('mouseup');
+                    });
+                }
+            });
+            $('.uncheck').click(function() {
+                var button = this;
+                var buttonid = $(this).attr('id');                
+                var id = buttonid.substring(6);               
+                self.location.href = '#link' + id;
+
+            });
+            $('.check').click(function() {
+                var button = this;
+                var buttonid = $(this).attr('id');                
+                var id = buttonid.substring(6);               
+                self.location.href = '#link' + id;
+
+            });  
+
+        });
+
+function submitme()
+{
+    var check = confirm("Are you sure to Submit ?");
+    if (check) {
+        document.getElementById("form1").action = "../view/result.php";
+        document.forms['form1'].submit();
+    }
+    return false;
+}
+
+var delay = 0;
+
+var Timer;
+var TotalSeconds;
+
+function CreateTimer(TimerID, delay, dur) {
+    Timer = document.getElementById(TimerID);
+    var elapsedTime =  parseInt(delay);
+    if (isNaN(elapsedTime))
+        elapsedTime = 0;
+    TotalSeconds = parseInt(dur) - elapsedTime;
+    if (TotalSeconds < 0)
+        TotalSeconds = 0;
+
+    UpdateTimer()
+    window.setTimeout("Tick()", 1000);
+}
+
+function Tick() {
+    if (TotalSeconds == 0)
+    {
+        alert("Your Time's up!!!");
+        document.getElementById("form1").action = "../view/result.php";
+        document.forms['form1'].submit();
+    }
+    else
+    {
+        TotalSeconds -= 1;
+        UpdateTimer()
+        window.setTimeout("Tick()", 1000);
+    }
+}
+
+function UpdateTimer() {
+    var obj = secondsToTime(TotalSeconds);
+    Timer.innerHTML = obj;
+}
+
+function secondsToTime(secs) {
+    var hours = Math.floor(secs / (60 * 60));
+    var divisor_for_minutes = secs % (60 * 60);
+    var minutes = Math.floor(divisor_for_minutes / 60);
+    var divisor_for_seconds = divisor_for_minutes % 60;
+    var seconds = Math.ceil(divisor_for_seconds);
+
+    return hours + ":" + minutes + ":" + seconds;
+}
+
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        document.getElementById("myBtn").style.display = "block";
+    } else {
+        document.getElementById("myBtn").style.display = "none";
+    }
+    document.getElementById("div1").innerHTML = "";
+}
+
+function topFunction() {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
+}
+
+document.oncontextmenu = function () {
+    return false;
+};
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML" id="">
+</script>
+
+<title>Online Evaluation Ssyetm</title>
+<style>
+.active {
+    background: red;
+}
+
+button.btn:active {
+    background: red;
+}
+
+.btn {
+    background: green;
+}
+
+.btn:focus {
+    background: red;
+}
+
+h1 {
+    color: white;
+    text-align: center;
+}
+
+p {
+    font-family: "Times New Roman";
+    font-size: 18px;
+}
+
+body {
+    font-family: "Times New Roman";
+    font-size: 18px;
+    background-color: #f8eaea;  
+}
+
+hr {
+    border: 1px #ccc;
+    border-style: none none solid none;
+    margin: 20px 0;
+}
+
+a {
+    color: #333;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+a.selected {
+    font-weight: bold;
+    text-decoration: underline;
+    background-color: red;
+    color: white;
+}
+
+a.attempted {
+    font-weight: bold;
+    text-decoration: underline;
+    background-color: green;
+    color: white;
+}
+
+.numbers {
+    line-height: 22x;
+    word-spacing: 4px;
+    background-color: lightblue;
+}
+
+#myBtn {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 30px;
+    z-index: 99;
+    border: none;
+    outline: none;
+    background-color: red;
+    color: white;
+    cursor: pointer;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+#myBtn:hover {
+    background-color: #555;
+}
+
+#saveBtn {
+    display: none;
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 99;
+    border: none;
+    outline: none;
+    background-color: red;
+    color: white;
+    cursor: pointer;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+#saveBtn:hover {
+    background-color: #555;
+}
+
+#annoying-box {
+    position: fixed;
+    top: 40px; /* space between top of browser and annoying box */
+    right: 10px; /* space between top of browser and annoying box */
+    width: 150px;
+    height: auto;
+    background-color: white;
+    color: black;
+    opacity: 0.8; border: solid 5px pink;
+}
+
+#annoying-box-user {
+    border: solid 5px pink;
+    position: fixed;
+    top: 10px; /* space between top of browser and annoying box */
+    left: 10px; /* space between top of browser and annoying box */
+    width: 150px;
+    height: auto;
+    background-color: red;
+    color: white;
+    opacity: 0.8;
+}
+
+#annoying-box-save {
+    position: fixed;
+    top: 540px; /* space between top of browser and annoying box */
+    right: 10px; /* space between top of browser and annoying box */
+    width: 150px;
+    height: auto;
+    background-color: #00A0B1;
+    color: white;
+    opacity: 0.8;
+}
+
+#annoying-box-attempted {
+    border: solid 5px pink;
+    position: fixed;
+    padding: 10px;
+    top: 180px; /* space between top of browser and annoying box */
+    right: 10px; /* space between top of browser and annoying box */
+    width: 300px;
+    height: auto;
+    background-color: white;
+    color: black;
+    opacity: 0.8;
+    text-align: left;
+}
+
+.timer {
+    border: solid 5px pink;
+    position: fixed;
+    top: 10px; /* space between top of browser and annoying box */
+    right: 10px; /* space between top of browser and annoying box */
+    width: 150px;
+    height: 30px;
+    background-color: red;
+    color: white;
+    opacity: 4;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.round {
+    border: 1px dotted #4FFFA1;
+    padding: 30px;
+    background: #f8eaea;
+    color: black;
+    font-weight: bold;
+    text-align: left;
+    width: auto;
+    height: auto;
+    border-radius: 10px;
+    width: 60%;
+}
+
+.roundwhite {
+    border: 1px dotted #4FFFA1;
+    padding: 30px;
+    background: #f8eaea; // pink color
+    color: black;    
+    text-align: left;
+    width: auto;
+    height: auto;
+    border-radius: 10px;
+    width: 60%;
+}
+
+.divider
+{
+    border: 1px solid #4FFFA1;
+    background-color: #f8eaea; // pink color
+    color: black;
+    padding: 30px;
+    width: 100%;
+    height: auto;
+    overflow: auto scroll;
+    border-radius: 10px;
+}
+
+.mid
+{
+    text-align: center;
+}
+
+.question_part
+{
+    background-color: white;
+    color: black;
+    padding: 20px;
+    width: 1000px;
+    font-weight: bold;
+    overflow: auto;'
+}
+
+body
+{
+    font-family: "Times New Roman";
+    font-size: 12px;
+}
+
+.uncheck{
+    border: solid 1px pink;       
+    background-color: red; 
+    appearance: button;
+    -moz-appearance: button;
+    -webkit-appearance: button;
+    text-decoration: none; font: menu; color: white;
+    display: inline-block; padding: 2px 8px;
+}
+
+.check{
+    border: solid 1px pink;       
+    background-color: green; 
+    appearance: button;
+    -moz-appearance: button;
+    -webkit-appearance: button;
+    text-decoration: none; font: menu; color: white;
+    display: inline-block; padding: 2px 8px;
+}
+
+.container {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Hide the browser's default radio button */
+.container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* Create a custom radio button */
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: grey;
+    border-radius: 50%;
+}
+
+/* On mouse-over, add a grey background color */
+.container:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+
+/* When the radio button is checked, add a blue background */
+.container input:checked ~ .checkmark {
+    background-color: #2196F3;
+}
+
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the indicator (dot/circle) when checked */
+.container input:checked ~ .checkmark:after {
+    display: block;
+}
+
+/* Style the indicator (dot/circle) */
+.container .checkmark:after {
+    top: 9px;
+    left: 9px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: white;
+}
+
+</style>
+<style type="text/css">.MathJax_Hover_Frame {border-radius: .25em; -webkit-border-radius: .25em; -moz-border-radius: .25em; -khtml-border-radius: .25em; box-shadow: 0px 0px 15px #83A; -webkit-box-shadow: 0px 0px 15px #83A; -moz-box-shadow: 0px 0px 15px #83A; -khtml-box-shadow: 0px 0px 15px #83A; border: 1px solid #A6D ! important; display: inline-block; position: absolute}
+.MathJax_Menu_Button .MathJax_Hover_Arrow {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; -khtml-border-radius: 4px; font-family: 'Courier New',Courier; font-size: 9px; color: #F0F0F0}
+.MathJax_Menu_Button .MathJax_Hover_Arrow span {display: block; background-color: #AAA; border: 1px solid; border-radius: 3px; line-height: 0; padding: 4px}
+.MathJax_Hover_Arrow:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_Hover_Arrow:hover span {background-color: #CCC!important}
+</style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_About.MathJax_MousePost {outline: none}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 2px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 2px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; padding-top: .25em; color: #666666; font-size: .75em}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: 1em}
+.MathJax_MenuRadioCheck.RTL {right: 1em; left: auto}
+.MathJax_MenuLabel {padding: 2px 2em 4px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #CCCCCC; margin: 4px 1px 0px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: Highlight; color: HighlightText}
+.MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus {background-color: #E8E8E8}
+.MathJax_ContextMenu:focus {outline: none}
+.MathJax_ContextMenu .MathJax_MenuItem:focus {outline: none}
+#MathJax_AboutClose {top: .2em; right: .2em}
+.MathJax_Menu .MathJax_MenuClose {top: -10px; left: -10px}
+.MathJax_MenuClose {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; font-family: 'Courier New',Courier; font-size: 24px; color: #F0F0F0}
+.MathJax_MenuClose span {display: block; background-color: #AAA; border: 1.5px solid; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; line-height: 0; padding: 8px 0 6px}
+.MathJax_MenuClose:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_MenuClose:hover span {background-color: #CCC!important}
+.MathJax_MenuClose:hover:focus {outline: none}
+</style><style type="text/css">.MathJax_Preview .MJXf-math {color: inherit!important}
+</style><style type="text/css">.MJX_Assistive_MathML {position: absolute!important; top: 0; left: 0; clip: rect(1px, 1px, 1px, 1px); padding: 1px 0 0 0!important; border: 0!important; height: 1px!important; width: 1px!important; overflow: hidden!important; display: block!important; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none}
+.MJX_Assistive_MathML.MJX_Assistive_MathML_Block {width: 100%!important}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1em; bottom: 1.5em; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><style type="text/css">.MJXp-script {font-size: .8em}
+.MJXp-right {-webkit-transform-origin: right; -moz-transform-origin: right; -ms-transform-origin: right; -o-transform-origin: right; transform-origin: right}
+.MJXp-bold {font-weight: bold}
+.MJXp-italic {font-style: italic}
+.MJXp-scr {font-family: MathJax_Script,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-frak {font-family: MathJax_Fraktur,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-sf {font-family: MathJax_SansSerif,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-cal {font-family: MathJax_Caligraphic,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-mono {font-family: MathJax_Typewriter,'Times New Roman',Times,STIXGeneral,serif}
+.MJXp-largeop {font-size: 150%}
+.MJXp-largeop.MJXp-int {vertical-align: -.2em}
+.MJXp-math {display: inline-block; line-height: 1.2; text-indent: 0; font-family: 'Times New Roman',Times,STIXGeneral,serif; white-space: nowrap; border-collapse: collapse}
+.MJXp-display {display: block; text-align: center; margin: 1em 0}
+.MJXp-math span {display: inline-block}
+.MJXp-box {display: block!important; text-align: center}
+.MJXp-box:after {content: " "}
+.MJXp-rule {display: block!important; margin-top: .1em}
+.MJXp-char {display: block!important}
+.MJXp-mo {margin: 0 .15em}
+.MJXp-mfrac {margin: 0 .125em; vertical-align: .25em}
+.MJXp-denom {display: inline-table!important; width: 100%}
+.MJXp-denom > * {display: table-row!important}
+.MJXp-surd {vertical-align: top}
+.MJXp-surd > * {display: block!important}
+.MJXp-script-box > *  {display: table!important; height: 50%}
+.MJXp-script-box > * > * {display: table-cell!important; vertical-align: top}
+.MJXp-script-box > *:last-child > * {vertical-align: bottom}
+.MJXp-script-box > * > * > * {display: block!important}
+.MJXp-mphantom {visibility: hidden}
+.MJXp-munderover {display: inline-table!important}
+.MJXp-over {display: inline-block!important; text-align: center}
+.MJXp-over > * {display: block!important}
+.MJXp-munderover > * {display: table-row!important}
+.MJXp-mtable {vertical-align: .25em; margin: 0 .125em}
+.MJXp-mtable > * {display: inline-table!important; vertical-align: middle}
+.MJXp-mtr {display: table-row!important}
+.MJXp-mtd {display: table-cell!important; text-align: center; padding: .5em 0 0 .5em}
+.MJXp-mtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-mlabeledtr {display: table-row!important}
+.MJXp-mlabeledtr > .MJXp-mtd:first-child {padding-left: 0}
+.MJXp-mlabeledtr:first-child > .MJXp-mtd {padding-top: 0}
+.MJXp-merror {background-color: #FFFF88; color: #CC0000; border: 1px solid #CC0000; padding: 1px 3px; font-style: normal; font-size: 90%}
+.MJXp-scale0 {-webkit-transform: scaleX(.0); -moz-transform: scaleX(.0); -ms-transform: scaleX(.0); -o-transform: scaleX(.0); transform: scaleX(.0)}
+.MJXp-scale1 {-webkit-transform: scaleX(.1); -moz-transform: scaleX(.1); -ms-transform: scaleX(.1); -o-transform: scaleX(.1); transform: scaleX(.1)}
+.MJXp-scale2 {-webkit-transform: scaleX(.2); -moz-transform: scaleX(.2); -ms-transform: scaleX(.2); -o-transform: scaleX(.2); transform: scaleX(.2)}
+.MJXp-scale3 {-webkit-transform: scaleX(.3); -moz-transform: scaleX(.3); -ms-transform: scaleX(.3); -o-transform: scaleX(.3); transform: scaleX(.3)}
+.MJXp-scale4 {-webkit-transform: scaleX(.4); -moz-transform: scaleX(.4); -ms-transform: scaleX(.4); -o-transform: scaleX(.4); transform: scaleX(.4)}
+.MJXp-scale5 {-webkit-transform: scaleX(.5); -moz-transform: scaleX(.5); -ms-transform: scaleX(.5); -o-transform: scaleX(.5); transform: scaleX(.5)}
+.MJXp-scale6 {-webkit-transform: scaleX(.6); -moz-transform: scaleX(.6); -ms-transform: scaleX(.6); -o-transform: scaleX(.6); transform: scaleX(.6)}
+.MJXp-scale7 {-webkit-transform: scaleX(.7); -moz-transform: scaleX(.7); -ms-transform: scaleX(.7); -o-transform: scaleX(.7); transform: scaleX(.7)}
+.MJXp-scale8 {-webkit-transform: scaleX(.8); -moz-transform: scaleX(.8); -ms-transform: scaleX(.8); -o-transform: scaleX(.8); transform: scaleX(.8)}
+.MJXp-scale9 {-webkit-transform: scaleX(.9); -moz-transform: scaleX(.9); -ms-transform: scaleX(.9); -o-transform: scaleX(.9); transform: scaleX(.9)}
+.MathJax_PHTML .noError {vertical-align: ; font-size: 90%; text-align: left; color: black; padding: 1px 3px; border: 1px solid}
+</style></head>
+<body onload="CreateTimer('timer', delay, 2400)">
+
+    <button onclick="CreateTimer('timer', delay, 3600)" id="myBtn" title="Go to top" style="display: block;">Top</button>
+    <div id="annoying-box-user"><p>
+                Hello Suman Kumar 12000115116<br>
+    </p></div>
+
+    <div class="timer" id="timer">0:38:49</div>
+    <div id="annoying-box"><p>
+                <a href="#set1">CS703C</a><br>
+                        <a href="#set2">CS704C</a><br>
+                                                <a id="top" href="#bottom">Bottom</a></p>
+    </div>
+
+    <div id="annoying-box-save"><p>
+        <button id="radio_submit" type="button">Save your Answer</button></p>
+        <div id="div1"></div>
+    </div>
+
+    <form id="form1" method="post" action="../view/result.php" onsubmit="return submitme()">
+        <input type="hidden" name="rollno" value="12000115116"><input type="hidden" name="name" value="Suman Kumar"><input type="hidden" name="lname" value="Bag"><input type="hidden" name="deptid" value="CSE"><input type="hidden" name="semid" value="Semester7"><input type="hidden" name="email" value="sumanbag5116@gmail.com"><input type="hidden" name="mobile" value="8967488469"><input type="hidden" name="gpa" value="7.25"><input type="hidden" name="test_id" value="124">        <center><div style="background-color: #0094ff; color: white; font-size: 20px;">CS703C</div></center>
+        <hr>
+        <div id="annoying-box-attempted"><p><a class="uncheck" href="#link1" id="button1" style="background: green;">1</a>&nbsp;<a class="uncheck" href="#link2" id="button2" style="background: green;">2</a>&nbsp;<a class="uncheck" href="#link3" id="button3">3</a>&nbsp;<a class="uncheck" href="#link4" id="button4" style="background: green;">4</a>&nbsp;<a class="uncheck" href="#link5" id="button5" style="background: green;">5</a>&nbsp;<a class="uncheck" href="#link6" id="button6">6</a>&nbsp;<a class="uncheck" href="#link7" id="button7" style="background: green;">7</a>&nbsp;<a class="uncheck" href="#link8" id="button8">8</a>&nbsp;<a class="uncheck" href="#link9" id="button9">9</a>&nbsp;<a class="uncheck" href="#link10" id="button10" style="background: green;">10</a>&nbsp;<a class="uncheck" href="#link11" id="button11" style="background: green;">11</a>&nbsp;<a class="uncheck" href="#link12" id="button12" style="background: green;">12</a>&nbsp;<a class="uncheck" href="#link13" id="button13">13</a>&nbsp;<a class="uncheck" href="#link14" id="button14" style="background: green;">14</a>&nbsp;<a class="uncheck" href="#link15" id="button15" style="background: green;">15</a>&nbsp;<a class="uncheck" href="#link16" id="button16" style="background: green;">16</a>&nbsp;<a class="uncheck" href="#link17" id="button17">17</a>&nbsp;<a class="uncheck" href="#link18" id="button18" style="background: green;">18</a>&nbsp;<a class="uncheck" href="#link19" id="button19" style="background: green;">19</a>&nbsp;<a class="uncheck" href="#link20" id="button20" style="background: green;">20</a>&nbsp;<a class="uncheck" href="#link21" id="button21">21</a>&nbsp;<a class="uncheck" href="#link22" id="button22">22</a>&nbsp;<a class="uncheck" href="#link23" id="button23">23</a>&nbsp;<a class="uncheck" href="#link24" id="button24">24</a>&nbsp;<a class="uncheck" href="#link25" id="button25">25</a>&nbsp;<a class="uncheck" href="#link26" id="button26">26</a>&nbsp;<a class="uncheck" href="#link27" id="button27">27</a>&nbsp;<a class="uncheck" href="#link28" id="button28">28</a>&nbsp;<a class="uncheck" href="#link29" id="button29">29</a>&nbsp;<a class="uncheck" href="#link30" id="button30">30</a>&nbsp;</p></div>                    <div id="set1" class="divider">
+                        <div style="text-align: center"><a style="color: red;" name="link1"><strong>Question1</strong></a></div>
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 60%;">
+                                <col span="1" style="width: 40%;">      
+                            </colgroup>
+
+                            <tbody><tr>
+                                <td><div style="min-width: 700px; width: auto; border: 1px solid #4FFFA1; padding: 30px; background-color: white; color: black; text-align: left; height: auto; border-radius: 2px;">
+                                    <p>What is Artificial intelligence?<br>&nbsp;<br><br>&nbsp;<br>&nbsp;</p>                           
+                                </div></td>
+                                <td><div>
+                                                                    </div></td>
+                            </tr>
+                        </tbody></table>
+
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 5%;">
+                                <col span="1" style="width: 55%;">      
+                            </colgroup>
+                            <tbody><tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">1</span><input class="rg" type="radio" name="rad1[]" id="rad1" value="1"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Putting your intelligence into Computer</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">2</span><input class="rg" type="radio" name="rad1[]" id="rad1" value="2"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Programming with your own intelligence</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">3</span><input class="rg" type="radio" name="rad1[]" id="rad1" value="3"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Making a Machine intelligent</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">4</span><input class="rg" type="radio" name="rad1[]" id="rad1" value="4"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Playing a Game</p></label></div></td>
+                            </tr>                                             
+                        </tbody></table>
+
+                        <input type="hidden" id="question_id1" value="8024">
+                        <input type="hidden" id="rollno" value="12000115116">
+                        <input type="hidden" name="answer[1][ans]" value="3">
+                    </div>
+                                        <div id="set1" class="divider">
+                        <div style="text-align: center"><a style="color: red;" name="link2"><strong>Question2</strong></a></div>
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 60%;">
+                                <col span="1" style="width: 40%;">      
+                            </colgroup>
+
+                            <tbody><tr>
+                                <td><div style="min-width: 700px; width: auto; border: 1px solid #4FFFA1; padding: 30px; background-color: white; color: black; text-align: left; height: auto; border-radius: 2px;">
+                                    <p>Who is the “father” of artificial intelligence?<br><br>&nbsp;<br>&nbsp;<br>&nbsp;</p>                           
+                                </div></td>
+                                <td><div>
+                                                                    </div></td>
+                            </tr>
+                        </tbody></table>
+
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 5%;">
+                                <col span="1" style="width: 55%;">      
+                            </colgroup>
+                            <tbody><tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">1</span><input class="rg" type="radio" name="rad2[]" id="rad2" value="1"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Fisher Ada</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">2</span><input class="rg" type="radio" name="rad2[]" id="rad2" value="2"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>John McCarthy</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">3</span><input class="rg" type="radio" name="rad2[]" id="rad2" value="3"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Allen Newell</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">4</span><input class="rg" type="radio" name="rad2[]" id="rad2" value="4"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Alan Turning</p></label></div></td>
+                            </tr>                                             
+                        </tbody></table>
+
+                        <input type="hidden" id="question_id2" value="8028">
+                        <input type="hidden" id="rollno" value="12000115116">
+                        <input type="hidden" name="answer[2][ans]" value="1">
+                    </div>
+                                        <div id="set1" class="divider">
+                        <div style="text-align: center"><a style="color: red;" name="link3"><strong>Question3</strong></a></div>
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 60%;">
+                                <col span="1" style="width: 40%;">      
+                            </colgroup>
+
+                            <tbody><tr>
+                                <td><div style="min-width: 700px; width: auto; border: 1px solid #4FFFA1; padding: 30px; background-color: white; color: black; text-align: left; height: auto; border-radius: 2px;">
+                                    <p>Strong Artificial Intelligence is<br>&nbsp;<br><br><br><br></p>                           
+                                </div></td>
+                                <td><div>
+                                                                    </div></td>
+                            </tr>
+                        </tbody></table>
+
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 5%;">
+                                <col span="1" style="width: 55%;">      
+                            </colgroup>
+                            <tbody><tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">1</span><input class="rg" type="radio" name="rad3[]" id="rad3" value="1"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>the embodiment of human intellectual capabilities within a computer</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">2</span><input class="rg" type="radio" name="rad3[]" id="rad3" value="2"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>a set of computer programs that produce output that would be considered to reflect intelligence if it were generated by humans</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">3</span><input class="rg" type="radio" name="rad3[]" id="rad3" value="3"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>the study of mental faculties through the use of mental models implemented on a computer</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">4</span><input class="rg" type="radio" name="rad3[]" id="rad3" value="4"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>all of the mentioned</p></label></div></td>
+                            </tr>                                             
+                        </tbody></table>
+
+                        <input type="hidden" id="question_id3" value="8032">
+                        <input type="hidden" id="rollno" value="12000115116">
+                        <input type="hidden" name="answer[3][ans]" value="1">
+                    </div>
+                                        <div id="set1" class="divider">
+                        <div style="text-align: center"><a style="color: red;" name="link4"><strong>Question4</strong></a></div>
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 60%;">
+                                <col span="1" style="width: 40%;">      
+                            </colgroup>
+
+                            <tbody><tr>
+                                <td><div style="min-width: 700px; width: auto; border: 1px solid #4FFFA1; padding: 30px; background-color: white; color: black; text-align: left; height: auto; border-radius: 2px;">
+                                    <p>A.M. Turing developed a technique for determining whether a computer could or could not demonstrate the artificial Intelligence, Presently, this technique is called<br><br><br><br><br> </p>                           
+                                </div></td>
+                                <td><div>
+                                                                    </div></td>
+                            </tr>
+                        </tbody></table>
+
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 5%;">
+                                <col span="1" style="width: 55%;">      
+                            </colgroup>
+                            <tbody><tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">1</span><input class="rg" type="radio" name="rad4[]" id="rad4" value="1"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Algorithm</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">2</span><input class="rg" type="radio" name="rad4[]" id="rad4" value="2"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Turing Test</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">3</span><input class="rg" type="radio" name="rad4[]" id="rad4" value="3"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Boolean Algebra</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">4</span><input class="rg" type="radio" name="rad4[]" id="rad4" value="4"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Logarithm</p></label></div></td>
+                            </tr>                                             
+                        </tbody></table>
+
+                        <input type="hidden" id="question_id4" value="8038">
+                        <input type="hidden" id="rollno" value="12000115116">
+                        <input type="hidden" name="answer[4][ans]" value="2">
+                    </div>
+                                        <div id="set1" class="divider">
+                        <div style="text-align: center"><a style="color: red;" name="link5"><strong>Question5</strong></a></div>
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 60%;">
+                                <col span="1" style="width: 40%;">      
+                            </colgroup>
+
+                            <tbody><tr>
+                                <td><div style="min-width: 700px; width: auto; border: 1px solid #4FFFA1; padding: 30px; background-color: white; color: black; text-align: left; height: auto; border-radius: 2px;">
+                                    <p>Which search method takes less memory?<br><br><br><br><br></p>                           
+                                </div></td>
+                                <td><div>
+                                                                    </div></td>
+                            </tr>
+                        </tbody></table>
+
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 5%;">
+                                <col span="1" style="width: 55%;">      
+                            </colgroup>
+                            <tbody><tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">1</span><input class="rg" type="radio" name="rad5[]" id="rad5" value="1"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Depth-First Search</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">2</span><input class="rg" type="radio" name="rad5[]" id="rad5" value="2"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>breadth-First search</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">3</span><input class="rg" type="radio" name="rad5[]" id="rad5" value="3"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Optimal search</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">4</span><input class="rg" type="radio" name="rad5[]" id="rad5" value="4"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Linear Search</p></label></div></td>
+                            </tr>                                             
+                        </tbody></table>
+
+                        <input type="hidden" id="question_id5" value="8042">
+                        <input type="hidden" id="rollno" value="12000115116">
+                        <input type="hidden" name="answer[5][ans]" value="1">
+                    </div>
+                                        <div id="set1" class="divider">
+                        <div style="text-align: center"><a style="color: red;" name="link6"><strong>Question6</strong></a></div>
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 60%;">
+                                <col span="1" style="width: 40%;">      
+                            </colgroup>
+
+                            <tbody><tr>
+                                <td><div style="min-width: 700px; width: auto; border: 1px solid #4FFFA1; padding: 30px; background-color: white; color: black; text-align: left; height: auto; border-radius: 2px;">
+                                    <p>A heuristic is a way of trying<br><br><br><br><br> </p>                           
+                                </div></td>
+                                <td><div>
+                                                                    </div></td>
+                            </tr>
+                        </tbody></table>
+
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 5%;">
+                                <col span="1" style="width: 55%;">      
+                            </colgroup>
+                            <tbody><tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">1</span><input class="rg" type="radio" name="rad6[]" id="rad6" value="1"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>To discover something or an idea embedded in a program</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">2</span><input class="rg" type="radio" name="rad6[]" id="rad6" value="2"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>To search and measure how far a node in a search tree seems to be from a goal</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">3</span><input class="rg" type="radio" name="rad6[]" id="rad6" value="3"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>To compare two nodes in a search tree to see if one is better than the other is</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">4</span><input class="rg" type="radio" name="rad6[]" id="rad6" value="4"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>All of the mentioned</p></label></div></td>
+                            </tr>                                             
+                        </tbody></table>
+
+                        <input type="hidden" id="question_id6" value="8046">
+                        <input type="hidden" id="rollno" value="12000115116">
+                        <input type="hidden" name="answer[6][ans]" value="4">
+                    </div>
+                                        <div id="set1" class="divider">
+                        <div style="text-align: center"><a style="color: red;" name="link7"><strong>Question7</strong></a></div>
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 60%;">
+                                <col span="1" style="width: 40%;">      
+                            </colgroup>
+
+                            <tbody><tr>
+                                <td><div style="min-width: 700px; width: auto; border: 1px solid #4FFFA1; padding: 30px; background-color: white; color: black; text-align: left; height: auto; border-radius: 2px;">
+                                    <p>The performance of an agent can be improved by<br><br><br><br><br> </p>                           
+                                </div></td>
+                                <td><div>
+                                                                    </div></td>
+                            </tr>
+                        </tbody></table>
+
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 5%;">
+                                <col span="1" style="width: 55%;">      
+                            </colgroup>
+                            <tbody><tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">1</span><input class="rg" type="radio" name="rad7[]" id="rad7" value="1"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Perceiving</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">2</span><input class="rg" type="radio" name="rad7[]" id="rad7" value="2"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Learning</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">3</span><input class="rg" type="radio" name="rad7[]" id="rad7" value="3"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Observing</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">4</span><input class="rg" type="radio" name="rad7[]" id="rad7" value="4"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>None of the mentioned</p></label></div></td>
+                            </tr>                                             
+                        </tbody></table>
+
+                        <input type="hidden" id="question_id7" value="8050">
+                        <input type="hidden" id="rollno" value="12000115116">
+                        <input type="hidden" name="answer[7][ans]" value="2">
+                    </div>
+                                        <div id="set1" class="divider">
+                        <div style="text-align: center"><a style="color: red;" name="link8"><strong>Question8</strong></a></div>
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 60%;">
+                                <col span="1" style="width: 40%;">      
+                            </colgroup>
+
+                            <tbody><tr>
+                                <td><div style="min-width: 700px; width: auto; border: 1px solid #4FFFA1; padding: 30px; background-color: white; color: black; text-align: left; height: auto; border-radius: 2px;">
+                                    <p>&nbsp;What is state space?<br><br><br><br><br><span id="id8349" class="collapseomatic colomat-close colomat-visited" tabindex="0" title="View Answer"></span></p>                           
+                                </div></td>
+                                <td><div>
+                                                                    </div></td>
+                            </tr>
+                        </tbody></table>
+
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 5%;">
+                                <col span="1" style="width: 55%;">      
+                            </colgroup>
+                            <tbody><tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">1</span><input class="rg" type="radio" name="rad8[]" id="rad8" value="1"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>The whole problem</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">2</span><input class="rg" type="radio" name="rad8[]" id="rad8" value="2"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Your Definition to a problem</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">3</span><input class="rg" type="radio" name="rad8[]" id="rad8" value="3"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Problem you design</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">4</span><input class="rg" type="radio" name="rad8[]" id="rad8" value="4"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Representing your problem with variable and parameter</p></label></div></td>
+                            </tr>                                             
+                        </tbody></table>
+
+                        <input type="hidden" id="question_id8" value="8056">
+                        <input type="hidden" id="rollno" value="12000115116">
+                        <input type="hidden" name="answer[8][ans]" value="4">
+                    </div>
+                                        <div id="set1" class="divider">
+                        <div style="text-align: center"><a style="color: red;" name="link9"><strong>Question9</strong></a></div>
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 60%;">
+                                <col span="1" style="width: 40%;">      
+                            </colgroup>
+
+                            <tbody><tr>
+                                <td><div style="min-width: 700px; width: auto; border: 1px solid #4FFFA1; padding: 30px; background-color: white; color: black; text-align: left; height: auto; border-radius: 2px;">
+                                    <p>A problem in a search space is defined by one of these state.<br><br><br><br><br> </p>                           
+                                </div></td>
+                                <td><div>
+                                                                    </div></td>
+                            </tr>
+                        </tbody></table>
+
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 5%;">
+                                <col span="1" style="width: 55%;">      
+                            </colgroup>
+                            <tbody><tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">1</span><input class="rg" type="radio" name="rad9[]" id="rad9" value="1"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Initial state</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">2</span><input class="rg" type="radio" name="rad9[]" id="rad9" value="2"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Last state</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">3</span><input class="rg" type="radio" name="rad9[]" id="rad9" value="3"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Intermediate state</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">4</span><input class="rg" type="radio" name="rad9[]" id="rad9" value="4"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>All of the above</p></label></div></td>
+                            </tr>                                             
+                        </tbody></table>
+
+                        <input type="hidden" id="question_id9" value="8058">
+                        <input type="hidden" id="rollno" value="12000115116">
+                        <input type="hidden" name="answer[9][ans]" value="1">
+                    </div>
+                                        <div id="set1" class="divider">
+                        <div style="text-align: center"><a style="color: red;" name="link10"><strong>Question10</strong></a></div>
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 60%;">
+                                <col span="1" style="width: 40%;">      
+                            </colgroup>
+
+                            <tbody><tr>
+                                <td><div style="min-width: 700px; width: auto; border: 1px solid #4FFFA1; padding: 30px; background-color: white; color: black; text-align: left; height: auto; border-radius: 2px;">
+                                    <p>A production system consists of<br><br><br><br><br></p>                           
+                                </div></td>
+                                <td><div>
+                                                                    </div></td>
+                            </tr>
+                        </tbody></table>
+
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 5%;">
+                                <col span="1" style="width: 55%;">      
+                            </colgroup>
+                            <tbody><tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">1</span><input class="rg" type="radio" name="rad10[]" id="rad10" value="1"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>A set of Rule</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">2</span><input class="rg" type="radio" name="rad10[]" id="rad10" value="2"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>A sequence of steps</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">3</span><input class="rg" type="radio" name="rad10[]" id="rad10" value="3"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Set of Rule &amp; sequence of steps</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">4</span><input class="rg" type="radio" name="rad10[]" id="rad10" value="4"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Arbitrary representation to problem</p></label></div></td>
+                            </tr>                                             
+                        </tbody></table>
+
+                        <input type="hidden" id="question_id10" value="8070">
+                        <input type="hidden" id="rollno" value="12000115116">
+                        <input type="hidden" name="answer[10][ans]" value="3">
+                    </div>
+                                        <div id="set1" class="divider">
+                        <div style="text-align: center"><a style="color: red;" name="link11"><strong>Question11</strong></a></div>
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 60%;">
+                                <col span="1" style="width: 40%;">      
+                            </colgroup>
+
+                            <tbody><tr>
+                                <td><div style="min-width: 700px; width: auto; border: 1px solid #4FFFA1; padding: 30px; background-color: white; color: black; text-align: left; height: auto; border-radius: 2px;">
+                                    <p>Which search is implemented with an empty first-in-first-out queue?<br><br><br><br><br> </p>                           
+                                </div></td>
+                                <td><div>
+                                                                    </div></td>
+                            </tr>
+                        </tbody></table>
+
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 5%;">
+                                <col span="1" style="width: 55%;">      
+                            </colgroup>
+                            <tbody><tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">1</span><input class="rg" type="radio" name="rad11[]" id="rad11" value="1"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Depth-first search</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">2</span><input class="rg" type="radio" name="rad11[]" id="rad11" value="2"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Breadth-first search</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">3</span><input class="rg" type="radio" name="rad11[]" id="rad11" value="3"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Bidirectional search</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">4</span><input class="rg" type="radio" name="rad11[]" id="rad11" value="4"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>None of the mentioned</p></label></div></td>
+                            </tr>                                             
+                        </tbody></table>
+
+                        <input type="hidden" id="question_id11" value="8087">
+                        <input type="hidden" id="rollno" value="12000115116">
+                        <input type="hidden" name="answer[11][ans]" value="2">
+                    </div>
+                                        <div id="set1" class="divider">
+                        <div style="text-align: center"><a style="color: red;" name="link12"><strong>Question12</strong></a></div>
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 60%;">
+                                <col span="1" style="width: 40%;">      
+                            </colgroup>
+
+                            <tbody><tr>
+                                <td><div style="min-width: 700px; width: auto; border: 1px solid #4FFFA1; padding: 30px; background-color: white; color: black; text-align: left; height: auto; border-radius: 2px;">
+                                    <p>&nbsp;Hill-Climbing approach stuck for the following reasons<br><br><br><br><br></p>                           
+                                </div></td>
+                                <td><div>
+                                                                    </div></td>
+                            </tr>
+                        </tbody></table>
+
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 5%;">
+                                <col span="1" style="width: 55%;">      
+                            </colgroup>
+                            <tbody><tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">1</span><input class="rg" type="radio" name="rad12[]" id="rad12" value="1"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Local maxima</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">2</span><input class="rg" type="radio" name="rad12[]" id="rad12" value="2"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Ridges</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">3</span><input class="rg" type="radio" name="rad12[]" id="rad12" value="3"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Plateaux</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">4</span><input class="rg" type="radio" name="rad12[]" id="rad12" value="4"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>All of the mentioned</p></label></div></td>
+                            </tr>                                             
+                        </tbody></table>
+
+                        <input type="hidden" id="question_id12" value="8093">
+                        <input type="hidden" id="rollno" value="12000115116">
+                        <input type="hidden" name="answer[12][ans]" value="4">
+                    </div>
+                                        <div id="set1" class="divider">
+                        <div style="text-align: center"><a style="color: red;" name="link13"><strong>Question13</strong></a></div>
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 60%;">
+                                <col span="1" style="width: 40%;">      
+                            </colgroup>
+
+                            <tbody><tr>
+                                <td><div style="min-width: 700px; width: auto; border: 1px solid #4FFFA1; padding: 30px; background-color: white; color: black; text-align: left; height: auto; border-radius: 2px;">
+                                    <p>The initial state and the legal moves for each side define the __________ for the game.<br>&nbsp;</p>                           
+                                </div></td>
+                                <td><div>
+                                                                    </div></td>
+                            </tr>
+                        </tbody></table>
+
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 5%;">
+                                <col span="1" style="width: 55%;">      
+                            </colgroup>
+                            <tbody><tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">1</span><input class="rg" type="radio" name="rad13[]" id="rad13" value="1"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Search Tree</p>
+<p>&nbsp;</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">2</span><input class="rg" type="radio" name="rad13[]" id="rad13" value="2"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>&nbsp;Game Tree<br>&nbsp;</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">3</span><input class="rg" type="radio" name="rad13[]" id="rad13" value="3"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>State Space Search<br>&nbsp;</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">4</span><input class="rg" type="radio" name="rad13[]" id="rad13" value="4"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Forest</p></label></div></td>
+                            </tr>                                             
+                        </tbody></table>
+
+                        <input type="hidden" id="question_id13" value="8105">
+                        <input type="hidden" id="rollno" value="12000115116">
+                        <input type="hidden" name="answer[13][ans]" value="2">
+                    </div>
+                                        <div id="set1" class="divider">
+                        <div style="text-align: center"><a style="color: red;" name="link14"><strong>Question14</strong></a></div>
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 60%;">
+                                <col span="1" style="width: 40%;">      
+                            </colgroup>
+
+                            <tbody><tr>
+                                <td><div style="min-width: 700px; width: auto; border: 1px solid #4FFFA1; padding: 30px; background-color: white; color: black; text-align: left; height: auto; border-radius: 2px;">
+                                    <p>First Order Logic is also known as ___________<br><br></p>                           
+                                </div></td>
+                                <td><div>
+                                                                    </div></td>
+                            </tr>
+                        </tbody></table>
+
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 5%;">
+                                <col span="1" style="width: 55%;">      
+                            </colgroup>
+                            <tbody><tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">1</span><input class="rg" type="radio" name="rad14[]" id="rad14" value="1"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>First Order Predicate Calculus<br><br></p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">2</span><input class="rg" type="radio" name="rad14[]" id="rad14" value="2"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Quantification Theory<br><br></p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">3</span><input class="rg" type="radio" name="rad14[]" id="rad14" value="3"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Lower Order Calculus<br><br></p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">4</span><input class="rg" type="radio" name="rad14[]" id="rad14" value="4"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>All of the mentioned</p></label></div></td>
+                            </tr>                                             
+                        </tbody></table>
+
+                        <input type="hidden" id="question_id14" value="8111">
+                        <input type="hidden" id="rollno" value="12000115116">
+                        <input type="hidden" name="answer[14][ans]" value="4">
+                    </div>
+                                        <div id="set1" class="divider">
+                        <div style="text-align: center"><a style="color: red;" name="link15"><strong>Question15</strong></a></div>
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 60%;">
+                                <col span="1" style="width: 40%;">      
+                            </colgroup>
+
+                            <tbody><tr>
+                                <td><div style="min-width: 700px; width: auto; border: 1px solid #4FFFA1; padding: 30px; background-color: white; color: black; text-align: left; height: auto; border-radius: 2px;">
+                                    <p>Which is used to construct the complex sentences?<br><br></p>                           
+                                </div></td>
+                                <td><div>
+                                                                    </div></td>
+                            </tr>
+                        </tbody></table>
+
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 5%;">
+                                <col span="1" style="width: 55%;">      
+                            </colgroup>
+                            <tbody><tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">1</span><input class="rg" type="radio" name="rad15[]" id="rad15" value="1"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Symbols<br><br></p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">2</span><input class="rg" type="radio" name="rad15[]" id="rad15" value="2"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Connectives<br><br></p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">3</span><input class="rg" type="radio" name="rad15[]" id="rad15" value="3"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Logical connectives<br><br></p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">4</span><input class="rg" type="radio" name="rad15[]" id="rad15" value="4"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>All of the mentioned</p></label></div></td>
+                            </tr>                                             
+                        </tbody></table>
+
+                        <input type="hidden" id="question_id15" value="8117">
+                        <input type="hidden" id="rollno" value="12000115116">
+                        <input type="hidden" name="answer[15][ans]" value="3">
+                    </div>
+                    
+        <center><div style="background-color: #0094ff;color:white;font-size:20px;">CS704C</div></center>
+        <hr>
+                            
+                    <div id="set2" class="divider">
+                        <div style="text-align: center"><a style="color: red;" name="link16"><strong>Question16</strong></a></div>
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 60%;">
+                                <col span="1" style="width: 40%;">      
+                            </colgroup>
+
+                            <tbody><tr>
+                                <td><div style="min-width: 700px; width: auto; border: 1px solid #4FFFA1; padding: 30px; background-color: white; color: black; text-align: left; height: auto; border-radius: 2px;">
+                                    <p>A data warehouse is said to contain a 'time-varying' collection of data because _____________.</p>                           
+                                </div></td>
+                                <td><div>
+                                                                    </div></td>
+                            </tr>
+                        </tbody></table>
+
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 5%;">
+                                <col span="1" style="width: 55%;">      
+                            </colgroup>
+                            <tbody><tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">1</span><input class="rg" type="radio" name="rad16[]" id="rad16" value="1"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Its contents vary automatically with time</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">2</span><input class="rg" type="radio" name="rad16[]" id="rad16" value="2"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Its life-span is very limited</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">3</span><input class="rg" type="radio" name="rad16[]" id="rad16" value="3"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>It contains historical data</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">4</span><input class="rg" type="radio" name="rad16[]" id="rad16" value="4"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Its content has explicit time-stamp</p></label></div></td>
+                            </tr>                                             
+                        </tbody></table>
+
+                        <input type="hidden" id="question_id16" value="5979">
+                        <input type="hidden" id="rollno" value="12000115116">
+                        <input type="hidden" name="answer[16][ans]" value="3">
+                    </div>
+                                        
+                    <div id="set2" class="divider">
+                        <div style="text-align: center"><a style="color: red;" name="link17"><strong>Question17</strong></a></div>
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 60%;">
+                                <col span="1" style="width: 40%;">      
+                            </colgroup>
+
+                            <tbody><tr>
+                                <td><div style="min-width: 700px; width: auto; border: 1px solid #4FFFA1; padding: 30px; background-color: white; color: black; text-align: left; height: auto; border-radius: 2px;">
+                                    <p>Which one of the following is not considered a component of the data mining system?</p>                           
+                                </div></td>
+                                <td><div>
+                                                                    </div></td>
+                            </tr>
+                        </tbody></table>
+
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 5%;">
+                                <col span="1" style="width: 55%;">      
+                            </colgroup>
+                            <tbody><tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">1</span><input class="rg" type="radio" name="rad17[]" id="rad17" value="1"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Data mining engine</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">2</span><input class="rg" type="radio" name="rad17[]" id="rad17" value="2"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Knowledge base</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">3</span><input class="rg" type="radio" name="rad17[]" id="rad17" value="3"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Data warehouse server</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">4</span><input class="rg" type="radio" name="rad17[]" id="rad17" value="4"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Association rule</p></label></div></td>
+                            </tr>                                             
+                        </tbody></table>
+
+                        <input type="hidden" id="question_id17" value="6322">
+                        <input type="hidden" id="rollno" value="12000115116">
+                        <input type="hidden" name="answer[17][ans]" value="4">
+                    </div>
+                                        
+                    <div id="set2" class="divider">
+                        <div style="text-align: center"><a style="color: red;" name="link18"><strong>Question18</strong></a></div>
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 60%;">
+                                <col span="1" style="width: 40%;">      
+                            </colgroup>
+
+                            <tbody><tr>
+                                <td><div style="min-width: 700px; width: auto; border: 1px solid #4FFFA1; padding: 30px; background-color: white; color: black; text-align: left; height: auto; border-radius: 2px;">
+                                    <p>__________ helps to store the data closer to users to enhance the performance.</p>                           
+                                </div></td>
+                                <td><div>
+                                                                    </div></td>
+                            </tr>
+                        </tbody></table>
+
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 5%;">
+                                <col span="1" style="width: 55%;">      
+                            </colgroup>
+                            <tbody><tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">1</span><input class="rg" type="radio" name="rad18[]" id="rad18" value="1"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Data mart</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">2</span><input class="rg" type="radio" name="rad18[]" id="rad18" value="2"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Data warehouse</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">3</span><input class="rg" type="radio" name="rad18[]" id="rad18" value="3"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Metadata</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">4</span><input class="rg" type="radio" name="rad18[]" id="rad18" value="4"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>None of these</p></label></div></td>
+                            </tr>                                             
+                        </tbody></table>
+
+                        <input type="hidden" id="question_id18" value="6324">
+                        <input type="hidden" id="rollno" value="12000115116">
+                        <input type="hidden" name="answer[18][ans]" value="1">
+                    </div>
+                                        
+                    <div id="set2" class="divider">
+                        <div style="text-align: center"><a style="color: red;" name="link19"><strong>Question19</strong></a></div>
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 60%;">
+                                <col span="1" style="width: 40%;">      
+                            </colgroup>
+
+                            <tbody><tr>
+                                <td><div style="min-width: 700px; width: auto; border: 1px solid #4FFFA1; padding: 30px; background-color: white; color: black; text-align: left; height: auto; border-radius: 2px;">
+                                    <p>Which of the following is a type of knowledge discovered during data mining?</p>                           
+                                </div></td>
+                                <td><div>
+                                                                    </div></td>
+                            </tr>
+                        </tbody></table>
+
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 5%;">
+                                <col span="1" style="width: 55%;">      
+                            </colgroup>
+                            <tbody><tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">1</span><input class="rg" type="radio" name="rad19[]" id="rad19" value="1"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Association rules</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">2</span><input class="rg" type="radio" name="rad19[]" id="rad19" value="2"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Classification</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">3</span><input class="rg" type="radio" name="rad19[]" id="rad19" value="3"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Clustering</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">4</span><input class="rg" type="radio" name="rad19[]" id="rad19" value="4"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>All of these</p></label></div></td>
+                            </tr>                                             
+                        </tbody></table>
+
+                        <input type="hidden" id="question_id19" value="6325">
+                        <input type="hidden" id="rollno" value="12000115116">
+                        <input type="hidden" name="answer[19][ans]" value="4">
+                    </div>
+                                        
+                    <div id="set2" class="divider">
+                        <div style="text-align: center"><a style="color: red;" name="link20"><strong>Question20</strong></a></div>
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 60%;">
+                                <col span="1" style="width: 40%;">      
+                            </colgroup>
+
+                            <tbody><tr>
+                                <td><div style="min-width: 700px; width: auto; border: 1px solid #4FFFA1; padding: 30px; background-color: white; color: black; text-align: left; height: auto; border-radius: 2px;">
+                                    <p>In order to expand e-business data, a data warehouse must be transformed into a ____________.</p>                           
+                                </div></td>
+                                <td><div>
+                                                                    </div></td>
+                            </tr>
+                        </tbody></table>
+
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 5%;">
+                                <col span="1" style="width: 55%;">      
+                            </colgroup>
+                            <tbody><tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">1</span><input class="rg" type="radio" name="rad20[]" id="rad20" value="1"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Active data warehouse</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">2</span><input class="rg" type="radio" name="rad20[]" id="rad20" value="2"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Data mart</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">3</span><input class="rg" type="radio" name="rad20[]" id="rad20" value="3"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Web-enabled data warehouse</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">4</span><input class="rg" type="radio" name="rad20[]" id="rad20" value="4"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>All of the above</p></label></div></td>
+                            </tr>                                             
+                        </tbody></table>
+
+                        <input type="hidden" id="question_id20" value="6328">
+                        <input type="hidden" id="rollno" value="12000115116">
+                        <input type="hidden" name="answer[20][ans]" value="3">
+                    </div>
+                                        
+                    <div id="set2" class="divider">
+                        <div style="text-align: center"><a style="color: red;" name="link21"><strong>Question21</strong></a></div>
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 60%;">
+                                <col span="1" style="width: 40%;">      
+                            </colgroup>
+
+                            <tbody><tr>
+                                <td><div style="min-width: 700px; width: auto; border: 1px solid #4FFFA1; padding: 30px; background-color: white; color: black; text-align: left; height: auto; border-radius: 2px;">
+                                    <p>Prediction and description are the basic elementary goals of which technology?</p>                           
+                                </div></td>
+                                <td><div>
+                                                                    </div></td>
+                            </tr>
+                        </tbody></table>
+
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 5%;">
+                                <col span="1" style="width: 55%;">      
+                            </colgroup>
+                            <tbody><tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">1</span><input class="rg" type="radio" name="rad21[]" id="rad21" value="1"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Data mining</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">2</span><input class="rg" type="radio" name="rad21[]" id="rad21" value="2"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Data warehousing</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">3</span><input class="rg" type="radio" name="rad21[]" id="rad21" value="3"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>OLAP technology</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">4</span><input class="rg" type="radio" name="rad21[]" id="rad21" value="4"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>All of these</p></label></div></td>
+                            </tr>                                             
+                        </tbody></table>
+
+                        <input type="hidden" id="question_id21" value="6330">
+                        <input type="hidden" id="rollno" value="12000115116">
+                        <input type="hidden" name="answer[21][ans]" value="1">
+                    </div>
+                                        
+                    <div id="set2" class="divider">
+                        <div style="text-align: center"><a style="color: red;" name="link22"><strong>Question22</strong></a></div>
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 60%;">
+                                <col span="1" style="width: 40%;">      
+                            </colgroup>
+
+                            <tbody><tr>
+                                <td><div style="min-width: 700px; width: auto; border: 1px solid #4FFFA1; padding: 30px; background-color: white; color: black; text-align: left; height: auto; border-radius: 2px;">
+                                    <p>Which of the following step is adopted to build a good data warehouse?</p>                           
+                                </div></td>
+                                <td><div>
+                                                                    </div></td>
+                            </tr>
+                        </tbody></table>
+
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 5%;">
+                                <col span="1" style="width: 55%;">      
+                            </colgroup>
+                            <tbody><tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">1</span><input class="rg" type="radio" name="rad22[]" id="rad22" value="1"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Extracting data</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">2</span><input class="rg" type="radio" name="rad22[]" id="rad22" value="2"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Loading data</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">3</span><input class="rg" type="radio" name="rad22[]" id="rad22" value="3"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Creating dimensional model</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">4</span><input class="rg" type="radio" name="rad22[]" id="rad22" value="4"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>All of the above</p></label></div></td>
+                            </tr>                                             
+                        </tbody></table>
+
+                        <input type="hidden" id="question_id22" value="6331">
+                        <input type="hidden" id="rollno" value="12000115116">
+                        <input type="hidden" name="answer[22][ans]" value="4">
+                    </div>
+                                        
+                    <div id="set2" class="divider">
+                        <div style="text-align: center"><a style="color: red;" name="link23"><strong>Question23</strong></a></div>
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 60%;">
+                                <col span="1" style="width: 40%;">      
+                            </colgroup>
+
+                            <tbody><tr>
+                                <td><div style="min-width: 700px; width: auto; border: 1px solid #4FFFA1; padding: 30px; background-color: white; color: black; text-align: left; height: auto; border-radius: 2px;">
+                                    <p>___________ is concerned with the data cleaning process during which unnecessary information is removed.</p>                           
+                                </div></td>
+                                <td><div>
+                                                                    </div></td>
+                            </tr>
+                        </tbody></table>
+
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 5%;">
+                                <col span="1" style="width: 55%;">      
+                            </colgroup>
+                            <tbody><tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">1</span><input class="rg" type="radio" name="rad23[]" id="rad23" value="1"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Data selection</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">2</span><input class="rg" type="radio" name="rad23[]" id="rad23" value="2"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Data preprocessing</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">3</span><input class="rg" type="radio" name="rad23[]" id="rad23" value="3"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Data transformation</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">4</span><input class="rg" type="radio" name="rad23[]" id="rad23" value="4"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>None of these</p></label></div></td>
+                            </tr>                                             
+                        </tbody></table>
+
+                        <input type="hidden" id="question_id23" value="6337">
+                        <input type="hidden" id="rollno" value="12000115116">
+                        <input type="hidden" name="answer[23][ans]" value="2">
+                    </div>
+                                        
+                    <div id="set2" class="divider">
+                        <div style="text-align: center"><a style="color: red;" name="link24"><strong>Question24</strong></a></div>
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 60%;">
+                                <col span="1" style="width: 40%;">      
+                            </colgroup>
+
+                            <tbody><tr>
+                                <td><div style="min-width: 700px; width: auto; border: 1px solid #4FFFA1; padding: 30px; background-color: white; color: black; text-align: left; height: auto; border-radius: 2px;">
+                                    <p>The 2-tier data warehouse architecture consists of data repository tier and ________ tier.</p>                           
+                                </div></td>
+                                <td><div>
+                                                                    </div></td>
+                            </tr>
+                        </tbody></table>
+
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 5%;">
+                                <col span="1" style="width: 55%;">      
+                            </colgroup>
+                            <tbody><tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">1</span><input class="rg" type="radio" name="rad24[]" id="rad24" value="1"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Data staging</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">2</span><input class="rg" type="radio" name="rad24[]" id="rad24" value="2"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Metadata repository</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">3</span><input class="rg" type="radio" name="rad24[]" id="rad24" value="3"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Data mart</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">4</span><input class="rg" type="radio" name="rad24[]" id="rad24" value="4"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>None of these</p></label></div></td>
+                            </tr>                                             
+                        </tbody></table>
+
+                        <input type="hidden" id="question_id24" value="6340">
+                        <input type="hidden" id="rollno" value="12000115116">
+                        <input type="hidden" name="answer[24][ans]" value="3">
+                    </div>
+                                        
+                    <div id="set2" class="divider">
+                        <div style="text-align: center"><a style="color: red;" name="link25"><strong>Question25</strong></a></div>
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 60%;">
+                                <col span="1" style="width: 40%;">      
+                            </colgroup>
+
+                            <tbody><tr>
+                                <td><div style="min-width: 700px; width: auto; border: 1px solid #4FFFA1; padding: 30px; background-color: white; color: black; text-align: left; height: auto; border-radius: 2px;">
+                                    <p>Which of the following is the most ideal OLAP server?</p>                           
+                                </div></td>
+                                <td><div>
+                                                                    </div></td>
+                            </tr>
+                        </tbody></table>
+
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 5%;">
+                                <col span="1" style="width: 55%;">      
+                            </colgroup>
+                            <tbody><tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">1</span><input class="rg" type="radio" name="rad25[]" id="rad25" value="1"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>MOLAP</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">2</span><input class="rg" type="radio" name="rad25[]" id="rad25" value="2"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>ROLAP</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">3</span><input class="rg" type="radio" name="rad25[]" id="rad25" value="3"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>HOLAP</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">4</span><input class="rg" type="radio" name="rad25[]" id="rad25" value="4"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>DOLAP</p></label></div></td>
+                            </tr>                                             
+                        </tbody></table>
+
+                        <input type="hidden" id="question_id25" value="6341">
+                        <input type="hidden" id="rollno" value="12000115116">
+                        <input type="hidden" name="answer[25][ans]" value="1">
+                    </div>
+                                        
+                    <div id="set2" class="divider">
+                        <div style="text-align: center"><a style="color: red;" name="link26"><strong>Question26</strong></a></div>
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 60%;">
+                                <col span="1" style="width: 40%;">      
+                            </colgroup>
+
+                            <tbody><tr>
+                                <td><div style="min-width: 700px; width: auto; border: 1px solid #4FFFA1; padding: 30px; background-color: white; color: black; text-align: left; height: auto; border-radius: 2px;">
+                                    <p>ROLAP and MOLAP models have __________ architecture.</p>                           
+                                </div></td>
+                                <td><div>
+                                                                    </div></td>
+                            </tr>
+                        </tbody></table>
+
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 5%;">
+                                <col span="1" style="width: 55%;">      
+                            </colgroup>
+                            <tbody><tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">1</span><input class="rg" type="radio" name="rad26[]" id="rad26" value="1"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Client-server</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">2</span><input class="rg" type="radio" name="rad26[]" id="rad26" value="2"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>2-tier</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">3</span><input class="rg" type="radio" name="rad26[]" id="rad26" value="3"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>3-tier</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">4</span><input class="rg" type="radio" name="rad26[]" id="rad26" value="4"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>None of these</p></label></div></td>
+                            </tr>                                             
+                        </tbody></table>
+
+                        <input type="hidden" id="question_id26" value="6343">
+                        <input type="hidden" id="rollno" value="12000115116">
+                        <input type="hidden" name="answer[26][ans]" value="3">
+                    </div>
+                                        
+                    <div id="set2" class="divider">
+                        <div style="text-align: center"><a style="color: red;" name="link27"><strong>Question27</strong></a></div>
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 60%;">
+                                <col span="1" style="width: 40%;">      
+                            </colgroup>
+
+                            <tbody><tr>
+                                <td><div style="min-width: 700px; width: auto; border: 1px solid #4FFFA1; padding: 30px; background-color: white; color: black; text-align: left; height: auto; border-radius: 2px;">
+                                    <p>In which of the following processes data objects are analyzed without consulting a known class label?</p>                           
+                                </div></td>
+                                <td><div>
+                                                                    </div></td>
+                            </tr>
+                        </tbody></table>
+
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 5%;">
+                                <col span="1" style="width: 55%;">      
+                            </colgroup>
+                            <tbody><tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">1</span><input class="rg" type="radio" name="rad27[]" id="rad27" value="1"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Clustering analysis</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">2</span><input class="rg" type="radio" name="rad27[]" id="rad27" value="2"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Evolution analysis</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">3</span><input class="rg" type="radio" name="rad27[]" id="rad27" value="3"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Outlier analysis</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">4</span><input class="rg" type="radio" name="rad27[]" id="rad27" value="4"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>None of these</p></label></div></td>
+                            </tr>                                             
+                        </tbody></table>
+
+                        <input type="hidden" id="question_id27" value="6347">
+                        <input type="hidden" id="rollno" value="12000115116">
+                        <input type="hidden" name="answer[27][ans]" value="1">
+                    </div>
+                                        
+                    <div id="set2" class="divider">
+                        <div style="text-align: center"><a style="color: red;" name="link28"><strong>Question28</strong></a></div>
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 60%;">
+                                <col span="1" style="width: 40%;">      
+                            </colgroup>
+
+                            <tbody><tr>
+                                <td><div style="min-width: 700px; width: auto; border: 1px solid #4FFFA1; padding: 30px; background-color: white; color: black; text-align: left; height: auto; border-radius: 2px;">
+                                    <p>Which step in Apriori algorithm uses Apriori property?</p>                           
+                                </div></td>
+                                <td><div>
+                                                                    </div></td>
+                            </tr>
+                        </tbody></table>
+
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 5%;">
+                                <col span="1" style="width: 55%;">      
+                            </colgroup>
+                            <tbody><tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">1</span><input class="rg" type="radio" name="rad28[]" id="rad28" value="1"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Join step</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">2</span><input class="rg" type="radio" name="rad28[]" id="rad28" value="2"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Prune step</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">3</span><input class="rg" type="radio" name="rad28[]" id="rad28" value="3"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Candidate generation step</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">4</span><input class="rg" type="radio" name="rad28[]" id="rad28" value="4"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>None of these</p></label></div></td>
+                            </tr>                                             
+                        </tbody></table>
+
+                        <input type="hidden" id="question_id28" value="6349">
+                        <input type="hidden" id="rollno" value="12000115116">
+                        <input type="hidden" name="answer[28][ans]" value="3">
+                    </div>
+                                        
+                    <div id="set2" class="divider">
+                        <div style="text-align: center"><a style="color: red;" name="link29"><strong>Question29</strong></a></div>
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 60%;">
+                                <col span="1" style="width: 40%;">      
+                            </colgroup>
+
+                            <tbody><tr>
+                                <td><div style="min-width: 700px; width: auto; border: 1px solid #4FFFA1; padding: 30px; background-color: white; color: black; text-align: left; height: auto; border-radius: 2px;">
+                                    <p>which of the following involves the weight adjustment in neural network model by propagating the weight changes in backward direction?</p>                           
+                                </div></td>
+                                <td><div>
+                                                                    </div></td>
+                            </tr>
+                        </tbody></table>
+
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 5%;">
+                                <col span="1" style="width: 55%;">      
+                            </colgroup>
+                            <tbody><tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">1</span><input class="rg" type="radio" name="rad29[]" id="rad29" value="1"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Backpropagation</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">2</span><input class="rg" type="radio" name="rad29[]" id="rad29" value="2"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Neurodes</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">3</span><input class="rg" type="radio" name="rad29[]" id="rad29" value="3"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Hidden layer</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">4</span><input class="rg" type="radio" name="rad29[]" id="rad29" value="4"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Output layer</p></label></div></td>
+                            </tr>                                             
+                        </tbody></table>
+
+                        <input type="hidden" id="question_id29" value="6352">
+                        <input type="hidden" id="rollno" value="12000115116">
+                        <input type="hidden" name="answer[29][ans]" value="1">
+                    </div>
+                                        
+                    <div id="set2" class="divider">
+                        <div style="text-align: center"><a style="color: red;" name="link30"><strong>Question30</strong></a></div>
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 60%;">
+                                <col span="1" style="width: 40%;">      
+                            </colgroup>
+
+                            <tbody><tr>
+                                <td><div style="min-width: 700px; width: auto; border: 1px solid #4FFFA1; padding: 30px; background-color: white; color: black; text-align: left; height: auto; border-radius: 2px;">
+                                    <p>OLAP stands for ___________.</p>                           
+                                </div></td>
+                                <td><div>
+                                                                    </div></td>
+                            </tr>
+                        </tbody></table>
+
+                        <table>
+                            <colgroup>
+                                <col span="1" style="width: 5%;">
+                                <col span="1" style="width: 55%;">      
+                            </colgroup>
+                            <tbody><tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">1</span><input class="rg" type="radio" name="rad30[]" id="rad30" value="1"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Online analytical processing</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">2</span><input class="rg" type="radio" name="rad30[]" id="rad30" value="2"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Offline analytical processing</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">3</span><input class="rg" type="radio" name="rad30[]" id="rad30" value="3"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Online analysis processing</p></label></div></td>
+                            </tr>
+
+                            <tr>
+                                <td><div style="text-align: right; color: black;"><span class="mid">4</span><input class="rg" type="radio" name="rad30[]" id="rad30" value="4"></div></td>
+                                <td><div style="text-align: left; color: black;"><label><p>Online analytical publishing</p></label></div></td>
+                            </tr>                                             
+                        </tbody></table>
+
+                        <input type="hidden" id="question_id30" value="6357">
+                        <input type="hidden" id="rollno" value="12000115116">
+                        <input type="hidden" name="answer[30][ans]" value="1">
+                    </div>
+                            <center><div style="background-color:#0094ff;color:white;font-size:20px;"></div></center>
+        <hr>
+        
+        <center><div style="background-color:#0094ff;color:white;font-size:20px;"></div></center>
+        <hr>
+        
+        <center><div style="background-color:#0094ff;color:white;font-size:20px;"></div></center>
+        <hr>
+        
+        <center><div style="background-color:#0094ff;color:white;font-size:20px;"></div></center>
+        <hr>
+                <a href="#" id="bottom"></a>
+        <p align="center"><input type="submit" value="Submit Test"></p>
+    </form>
+    <div id="div1"></div>
+
+
+
+</body></html>
